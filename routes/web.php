@@ -36,4 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
+use App\Http\Controllers\CheckoutController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/confirmation/{order}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+    Route::get('/orders', [CheckoutController::class, 'history'])->name('orders.history');
+});
+
 require __DIR__.'/auth.php';
