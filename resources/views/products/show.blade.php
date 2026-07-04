@@ -25,7 +25,21 @@
                         {{ $product->stock > 0 ? $product->stock . ' in stock' : 'Out of stock' }}
                     </p>
                     <p class="text-gray-700 mt-4">{{ $product->description }}</p>
-
+                    @if ($product->stock > 0)
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-6 flex items-center gap-3">
+                            @csrf
+                            <label for="quantity" class="text-sm text-gray-600">Qty</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->stock }}"
+                                class="w-20 border rounded px-2 py-1">
+                            <button type="submit" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">
+                                Add to Cart
+                            </button>
+                        </form>
+                    @else
+                        <button disabled class="mt-6 bg-gray-300 text-gray-500 px-6 py-2 rounded cursor-not-allowed">
+                            Out of Stock
+                        </button>
+                    @endif
                     <a href="{{ route('products.index') }}" class="inline-block mt-6 text-indigo-600 hover:underline">
                         ← Back to Products
                     </a>

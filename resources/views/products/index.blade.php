@@ -47,23 +47,31 @@
             {{-- Product Grid --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($products as $product)
-                    <a href="{{ route('products.show', $product) }}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
-                        <div class="h-40 bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400">
-                            @if ($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" class="h-full object-cover rounded">
-                            @else
-                                No Image
-                            @endif
-                        </div>
-                        <h3 class="font-semibold text-gray-800">{{ $product->name }}</h3>
-                        <p class="text-sm text-gray-500">{{ $product->category->name }}</p>
-                        <p class="text-indigo-600 font-bold mt-2">${{ number_format($product->price, 2) }}</p>
-                    </a>
+                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
+                        <a href="{{ route('products.show', $product) }}">
+                            <div class="h-40 bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400">
+                                @if ($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" class="h-full object-cover rounded">
+                                @else
+                                    No Image
+                                @endif
+                            </div>
+                            <h3 class="font-semibold text-gray-800">{{ $product->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $product->category->name }}</p>
+                            <p class="text-indigo-600 font-bold mt-2">${{ number_format($product->price, 2) }}</p>
+                        </a>
+
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3">
+                            @csrf
+                            <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
                 @empty
                     <p class="text-gray-500 col-span-3">No products found.</p>
                 @endforelse
-            </div>
-
+                
             {{-- Pagination --}}
             <div class="mt-6">
                 {{ $products->links() }}
