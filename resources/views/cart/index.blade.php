@@ -48,7 +48,7 @@
                     <p class="text-xl font-bold">
                         Total: ${{ number_format($cart->items->sum(fn($i) => $i->price * $i->quantity), 2) }}
                     </p>
-                    <a href="#" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">
+                    <a href="{{ route('checkout.index') }}" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">
                         Proceed to Checkout
                     </a>
                 </div>
