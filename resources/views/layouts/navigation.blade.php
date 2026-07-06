@@ -12,14 +12,26 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                        {{ __('Dashboard') }}    
+                </x-nav-link>
+                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                         {{ __('Shop') }}
+                     </x-nav-link>  
                     <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
                         Cart
                     </x-nav-link>
                     <x-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
                         My Orders
                     </x-nav-link>
+                    @auth
+        <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+            {{ __('Manage Products') }}
+        </x-nav-link>
+
+        <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+            {{ __('Manage Categories') }}
+        </x-nav-link>
+    @endauth
                 </div>
             </div>
 
@@ -80,6 +92,25 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+            {{ __('Shop') }}
+        </x-responsive-nav-link>
+             <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
+            Cart
+        </x-responsive-nav-link>
+
+        <x-responsive-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
+            My Orders
+        </x-responsive-nav-link>
+        @auth
+            <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                {{ __('Manage Products') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+                {{ __('Manage Categories') }}
+            </x-responsive-nav-link>
+        @endauth
         </div>
 
         <!-- Responsive Settings Options -->
