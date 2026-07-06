@@ -8,7 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 // Admin product routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', AdminProductController::class);
     Route::resource('categories', AdminCategoryController::class);
 }); 
