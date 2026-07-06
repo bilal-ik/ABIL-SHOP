@@ -23,15 +23,15 @@
                     <x-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
                         My Orders
                     </x-nav-link>
-                    @auth
-        <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-            {{ __('Manage Products') }}
-        </x-nav-link>
+                  @if (auth()->check() && auth()->user()->is_admin)
+    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+        {{ __('Manage Products') }}
+    </x-nav-link>
 
-        <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-            {{ __('Manage Categories') }}
-        </x-nav-link>
-    @endauth
+    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+        {{ __('Manage Categories') }}
+    </x-nav-link>
+@endif
                 </div>
             </div>
 
@@ -102,15 +102,15 @@
         <x-responsive-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
             My Orders
         </x-responsive-nav-link>
-        @auth
-            <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                {{ __('Manage Products') }}
-            </x-responsive-nav-link>
+        @if (auth()->check() && auth()->user()->is_admin)
+    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+        {{ __('Manage Products') }}
+    </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-                {{ __('Manage Categories') }}
-            </x-responsive-nav-link>
-        @endauth
+    <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+        {{ __('Manage Categories') }}
+    </x-responsive-nav-link>
+@endif
         </div>
 
         <!-- Responsive Settings Options -->
