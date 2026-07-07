@@ -32,7 +32,9 @@ class ProductController extends Controller
 
         $products = $query->latest()->paginate(12)->withQueryString();
         $categories = Category::all();
-
+           if ($request->ajax()) {
+        return view('products.partials.grid', compact('products'));
+    }
         return view('products.index', compact('products', 'categories'));
     }
 
