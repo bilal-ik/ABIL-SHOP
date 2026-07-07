@@ -1,148 +1,151 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
+<nav x-data="{ open: false, catOpen: false }" class="bg-stone-900 text-white">
+    {{-- Top bar --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-               <div class="shrink-0 flex items-center">
-    <a href="{{ route('products.index') }}">
-        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-    </a>
-</div>
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}    
-                </x-nav-link>
-                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
-                         {{ __('Shop') }}
-                     </x-nav-link>  
-                    <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
-                        Cart
-                    </x-nav-link>
-                    <x-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
-                        My Orders
-                    </x-nav-link>
-                  @if (auth()->check() && auth()->user()->is_admin)
-    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-        {{ __('Manage Products') }}
-    </x-nav-link>
+        <div class="flex items-center justify-between h-16 gap-6">
 
-    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-        {{ __('Manage Categories') }}
-    </x-nav-link>
-@endif
+            {{-- Logo --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-2 shrink-0">
+                <svg
+                    class="w-8 h-8 text-orange-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16.5 6a3 3 0 11-6 0 3 3 0 016 0zM3 20a6 6 0 0112 0M15 20a6 6 0 016-4.472M13.5 6a3 3 0 116 0"/>
+                </svg>
+                <span class="text-xl font-extrabold tracking-tight">
+                    <span class="text-orange-500">ABIL</span>SHOP
+                </span>
+            </a>
+
+            {{-- Search bar (Amazon-style, centered) --}}
+            <form
+                action="{{ route('products.index') }}"
+                method="GET"
+                class="hidden md:flex flex-1 max-w-2xl">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search ABIL SHOP..."
+                    class="w-full rounded-l-md border-0 text-stone-800 text-sm focus:ring-2 focus:ring-orange-500">
+                    <button
+                        type="submit"
+                        class="bg-orange-500 hover:bg-orange-600 px-4 rounded-r-md flex items-center justify-center">
+                        <svg
+                            class="w-5 h-5 text-stone-900"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/>
+                        </svg>
+                    </button>
+                </form>
+
+                {{-- Right side: account + cart --}}
+                <div class="flex items-center gap-6 shrink-0">
+                    <div class="relative">
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <button
+                                    class="text-sm text-left leading-tight hover:text-orange-400 transition">
+                                    <span class="block text-stone-300 text-xs">Hello,
+                                        {{ Auth::user()->name ?? 'sign in' }}</span>
+                                    <span class="font-semibold">Account &amp; Orders</span>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                @auth
+                                <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                                <x-dropdown-link :href="route('orders.history')">My Orders</x-dropdown-link>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <x-dropdown-link
+                                        :href="route('logout')"
+                                        onclick="event.preventDefault(); this.closest('form').submit();">
+                                        Log Out
+                                    </x-dropdown-link>
+                                </form>
+                                @else
+                                <x-dropdown-link :href="route('login')">Login</x-dropdown-link>
+                                <x-dropdown-link :href="route('register')">Register</x-dropdown-link>
+                                @endauth
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
+
+                    <a
+                        href="{{ route('cart.index') }}"
+                        class="relative flex items-center gap-1 hover:text-orange-400 transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.8"
+                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 1.72-4.79 1.972-7.315a48.6 48.6 0 00-.108-1.03A1.125 1.125 0 0021.121 4.5H5.25M12 4.5H5.25m0 0L4.5 3M7.5 14.25L5.25 4.5m2.25 9.75L4.5 3"/>
+                        </svg>
+                        @auth @php $cart = auth()->user()->cart; $count = $cart ?
+                        $cart->items->sum('quantity') : 0; @endphp
+                        <span
+                            class="absolute -top-2 -right-2 bg-orange-500 text-stone-900 text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ $count }}
+                        </span>
+                        @endauth
+                        <span class="text-sm font-semibold hidden sm:inline">Cart</span>
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Settings Dropdown -->
-             
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-            @auth 
-            <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+        {{-- Category bar with hover dropdown --}}
+        <div class="bg-stone-800 border-t border-stone-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center gap-6 h-10 text-sm relative">
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                    {{-- All Categories hover dropdown --}}
+                    <div class="relative group h-full flex items-center">
+                        <button class="flex items-center gap-1 hover:text-orange-400 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            All Categories
                         </button>
-                    </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block bg-white text-stone-800 shadow-xl rounded-b-md w-64 py-2 z-50">
+                            @foreach ($allCategories ?? \App\Models\Category::all() as $cat)
+                            <a
+                                href="{{ route('products.index', ['category' => $cat->id]) }}"
+                                class="block px-4 py-2 hover:bg-orange-50 hover:text-orange-600 transition">
+                                {{ $cat->name }}
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-            @else
-        <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 mr-4">Log in</a>
-        <a href="{{ route('register') }}" class="text-sm text-gray-500 hover:text-gray-700">Register</a>
-@endauth
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                    {{-- Underline-style nav links --}}
+                    <a
+                        href="{{ route('products.index') }}"
+                        class="h-full flex items-center border-b-2 {{ request()->routeIs('products.index') || request()->routeIs('home') ? 'border-orange-500 text-orange-400' : 'border-transparent hover:border-orange-400 hover:text-orange-400' }} transition">
+                        Shop
+                    </a>
+                    <a
+                        href="{{ route('orders.history') }}"
+                        class="h-full flex items-center border-b-2 {{ request()->routeIs('orders.history') ? 'border-orange-500 text-orange-400' : 'border-transparent hover:border-orange-400 hover:text-orange-400' }} transition">
+                        My Orders
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-    <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
-            {{ __('Shop') }}
-        </x-responsive-nav-link>
-             <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
-            Cart
-        </x-responsive-nav-link>
-
-        <x-responsive-nav-link :href="route('orders.history')" :active="request()->routeIs('orders.history')">
-            My Orders
-        </x-responsive-nav-link>
-        @if (auth()->check() && auth()->user()->is_admin)
-    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-        {{ __('Manage Products') }}
-    </x-responsive-nav-link>
-
-    <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-        {{ __('Manage Categories') }}
-    </x-responsive-nav-link>
-@endif
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-           @auth
-        <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-            @else
-        <div class="px-4 space-y-1">
-            <x-responsive-nav-link :href="route('login')">Log in</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('register')">Register</x-responsive-nav-link>
-        </div>
-    @endauth
-        </div>
-    </div>
-</nav>
+    </nav>

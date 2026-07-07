@@ -14,7 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased bg-stone-50 bg-[url('/images/pattern-bg.svg')] bg-fixed">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
@@ -32,6 +32,7 @@
                 {{ $slot }}
             </main>
         </div>
+        <x-footer />    
         @stack('scripts')
     </body>
 </html>
