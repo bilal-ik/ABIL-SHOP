@@ -14,12 +14,12 @@
                     <div class="flex-1 min-w-[200px]">
                         <label class="block text-xs font-medium text-stone-500 uppercase tracking-wide mb-1">Search</label>
                         <input type="text" id="live-search" name="search" value="{{ request('search') }}" placeholder="Search products..."
-       class="w-full border-stone-300 rounded-lg focus:border-emerald-600 focus:ring-emerald-600 text-sm">
+                               class="w-full border-stone-300 rounded-lg focus:border-emerald-600 focus:ring-emerald-600 text-sm">
                     </div>
 
                     <div>
                         <label class="block text-xs font-medium text-stone-500 uppercase tracking-wide mb-1">Category</label>
-                        <select name="category" class="border-stone-300 rounded-lg focus:border-emerald-600 focus:ring-emerald-600 text-sm">
+                        <select name="category" onchange="this.form.submit()" class="border-stone-300 rounded-lg text-sm">
                             <option value="">All</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" @selected(request('category') == $category->id)>
@@ -31,16 +31,16 @@
 
                     <div>
                         <label class="block text-xs font-medium text-stone-500 uppercase tracking-wide mb-1">Min $</label>
-                        <input type="number" name="min_price" value="{{ request('min_price') }}" class="w-24 border-stone-300 rounded-lg focus:border-emerald-600 focus:ring-emerald-600 text-sm">
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" class="w-24 border-stone-300 rounded-lg text-sm">
                     </div>
 
                     <div>
                         <label class="block text-xs font-medium text-stone-500 uppercase tracking-wide mb-1">Max $</label>
-                        <input type="number" name="max_price" value="{{ request('max_price') }}" class="w-24 border-stone-300 rounded-lg focus:border-emerald-600 focus:ring-emerald-600 text-sm">
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" class="w-24 border-stone-300 rounded-lg text-sm">
                     </div>
 
-                    <button type="submit" class="bg-emerald-700 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-800 transition">
-                        Filter
+                    <button type="submit" class="bg-orange-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition">
+                        Apply
                     </button>
 
                     @if (request()->anyFilled(['search', 'category', 'min_price', 'max_price']))
@@ -51,37 +51,38 @@
 
             {{-- Result count --}}
             <p class="text-sm text-stone-500 mb-4">{{ $products->total() }} products</p>
-<div id="product-results">
-    @include('products.partials.grid')
-</div>
-                  
+
+            <div id="product-results">
+                @include('products.partials.grid')
+            </div>
 
         </div>
     </div>
+
     @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('live-search');
-    const resultsDiv = document.getElementById('product-results');
-    let debounceTimer;
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('live-search');
+        const resultsDiv = document.getElementById('product-results');
+        let debounceTimer;
 
-    searchInput.addEventListener('input', function () {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            const params = new URLSearchParams(window.location.search);
-            params.set('search', searchInput.value);
+        searchInput.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                params.set('search', searchInput.value);
 
-            fetch(`{{ route('products.index') }}?${params.toString()}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(res => res.text())
-            .then(html => {
-                resultsDiv.innerHTML = html;
-                window.history.replaceState({}, '', `?${params.toString()}`);
-            });
-        }, 400); // waits 400ms after typing stops before searching
+                fetch(`{{ route('products.index') }}?${params.toString()}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.text())
+                .then(html => {
+                    resultsDiv.innerHTML = html;
+                    window.history.replaceState({}, '', `?${params.toString()}`);
+                });
+            }, 400);
+        });
     });
-});
-</script>
-@endpush
+    </script>
+    @endpush
 </x-app-layout>
